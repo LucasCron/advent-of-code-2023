@@ -44,8 +44,8 @@ func main() {
 		lines := util.ReadTextFileToArray(path)
 		games := map[int]Game{}
 		var pointSum float64
+
 		for _, line := range lines {
-			// fmt.Println(line)
 			gameAndResults := strings.Split(line, ":")
 			gameNumber, err := strconv.Atoi(strings.ReplaceAll(gameAndResults[0], " ", "")[len("Card"):])
 			util.Check(err)
@@ -69,15 +69,11 @@ func main() {
 		totalCards := len(games)
 		for i := len(games); i > 0; i-- {
 			game := games[i]
-			// fmt.Println(fmt.Sprintf("Game: %d, Win Count: %d", i, game.winCount))
 
-			for j := game.winCount; game.winCount > 0 && j > 0; j-- {
+			for j := game.winCount; j > 0; j-- {
 				game.copyIdsWon = append(game.copyIdsWon, i+j)
-				// fmt.Println(fmt.Sprintf("Adding ID to Win List: %d", i+j))
 				game.cardsFromCopies += 1
 				game.cardsFromCopies += games[i+j].cardsFromCopies
-				// fmt.Println(fmt.Sprintf("Adding Total Cards Drawn to Count (+1): %d", games[i+j].cardsFromCopies))
-				// fmt.Println(fmt.Sprintf("New total Game Copies: %d", game.cardsFromCopies))
 			}
 
 			games[i] = game
