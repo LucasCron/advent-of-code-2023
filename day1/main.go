@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"lucascron.com/advent-of-code-2023/util"
 )
 
 type Number struct {
@@ -60,7 +60,7 @@ var (
 
 func main() {
 	for _, path := range files {
-		lines := readTextFileToArray(path)
+		lines := util.ReadTextFileToArray(path)
 		var sum int
 		for _, line := range lines {
 			front := getFirstNumber(line, false)
@@ -68,7 +68,7 @@ func main() {
 
 			calibrationValueStr := fmt.Sprintf("%s%s", front, back)
 			calibrationValue, err := strconv.Atoi(calibrationValueStr)
-			check(err)
+			util.Check(err)
 
 			fmt.Println(fmt.Sprintf("Line: %s, Front: %s, Back: %s", line, front, back))
 			sum = sum + calibrationValue
@@ -82,14 +82,14 @@ func getFirstNumber(text string, reversed bool) string {
 	chars := strings.Split(text, "")
 
 	if reversed {
-		chars = reverse(chars)
+		chars = util.Reverse(chars)
 	}
 
 	for i, c := range chars {
 		for _, n := range numbers {
 			word := n.word
 			if reversed {
-				word = reverseString(n.word)
+				word = util.ReverseString(n.word)
 			}
 
 			if c == string(n.val) {
@@ -111,44 +111,4 @@ func getFirstNumber(text string, reversed bool) string {
 	}
 
 	return "0"
-}
-
-func readTextFileToArray(path string) []string {
-	file, err := os.Open(path)
-	check(err)
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	var lines []string
-	for scanner.Scan() {
-		text := scanner.Text()
-		lines = append(lines, text)
-	}
-
-	if err = scanner.Err(); err != nil {
-		check(err)
-	}
-	return lines
-}
-
-func check(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-func reverse(s []string) []string {
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-		s[i], s[j] = s[j], s[i]
-	}
-	return s
-}
-
-func reverseString(s string) string {
-	runes := []rune(s)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		runes[i], runes[j] = runes[j], runes[i]
-	}
-	return string(runes)
 }
