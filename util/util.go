@@ -5,6 +5,19 @@ import (
 	"os"
 )
 
+var (
+	digits = [10]string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+)
+
+func IsNumber(c string) bool {
+	for _, d := range digits {
+		if c == d {
+			return true
+		}
+	}
+	return false
+}
+
 func ReadTextFileToArray(path string) []string {
 	file, err := os.Open(path)
 	Check(err)

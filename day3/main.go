@@ -13,7 +13,6 @@ var (
 		"example.txt",
 		"input.txt",
 	}
-	digits = [10]string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 )
 
 type Number struct {
@@ -24,18 +23,10 @@ type Number struct {
 	shouldBeCounted bool
 }
 
-func (n Number) print() {
-	fmt.Println(fmt.Sprintf("Value: %d, Row: %d, Start Index: %d, End Index: %d, ShouldBeCounted: %t", n.value, n.row, n.startIndex, n.endIndex, n.shouldBeCounted))
-}
-
 type Symbol struct {
 	row   int
 	index int
 	value string
-}
-
-func (s Symbol) print() {
-	fmt.Println(fmt.Sprintf("Row: %d, Index: %d, Value: %s", s.row, s.index, s.value))
 }
 
 func main() {
@@ -46,37 +37,36 @@ func main() {
 		var symbols []Symbol
 
 		for row, line := range lines {
-			// fmt.Println(line)
 			chars := strings.Split(line, "")
 
 			trackingNumber := false
 			var number Number
 			var numberArray []string
 			for i, c := range chars {
-				if !trackingNumber && isNumber(c) {
+				if !trackingNumber && util.IsNumber(c) {
 					number = Number{
 						startIndex: i,
 						row:        row,
 					}
 					numberArray = append(numberArray, c)
 					trackingNumber = true
-				} else if trackingNumber && isNumber(c) {
+				} else if trackingNumber && util.IsNumber(c) {
 					numberArray = append(numberArray, c)
 				}
-				if trackingNumber && (!isNumber(c) || i+1 == len(chars)) {
+				if trackingNumber && (!util.IsNumber(c) || i+1 == len(chars)) {
 					endOffset := 0
-					if isNumber(c) && i+1 == len(chars) {
+					if util.IsNumber(c) && i+1 == len(chars) {
 						endOffset = 1
 					}
 					number.endIndex = i - 1 + endOffset
-					number.value = concatNumberCharacterArrayToString(numberArray)
+					number.value = numCharArrayToInt(numberArray)
 					numbers = append(numbers, number)
 
 					trackingNumber = false
 					numberArray = nil
 				}
 
-				if !isPeriod(c) && !isNumber(c) {
+				if c != "." && !util.IsNumber(c) {
 					symbols = append(symbols, Symbol{
 						row:   row,
 						index: i,
@@ -85,7 +75,6 @@ func main() {
 					)
 				}
 			}
-
 		}
 
 		var partSum int
@@ -124,20 +113,7 @@ func main() {
 	}
 }
 
-func isNumber(c string) bool {
-	for _, d := range digits {
-		if c == d {
-			return true
-		}
-	}
-	return false
-}
-
-func isPeriod(c string) bool {
-	return c == "."
-}
-
-func concatNumberCharacterArrayToString(s []string) int {
+func numCharArrayToInt(s []string) int {
 	var numString string
 	for _, v := range s {
 		numString = numString + v
