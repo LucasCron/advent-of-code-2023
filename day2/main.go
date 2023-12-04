@@ -9,29 +9,30 @@ import (
 	"lucascron.com/advent-of-code-2023/util"
 )
 
+const (
+	redMax   = 12
+	greenMax = 13
+	blueMax  = 14
+
+	gamePrefix = "Game"
+
+	blueSuffix  = "blue"
+	greenSuffix = "green"
+	redSuffix   = "red"
+)
+
+var (
+	files = [2]string{
+		"example.txt",
+		"input.txt",
+	}
+	colors = [3]string{blueSuffix, greenSuffix, redSuffix}
+)
+
 type Roll struct {
 	reds   int
 	greens int
 	blues  int
-}
-
-type Game struct {
-	rolls    []Roll
-	id       int
-	MinRed   int
-	MinBlue  int
-	MinGreen int
-}
-
-func (g *Game) isPossible() bool {
-	isPossible := true
-	for _, roll := range g.rolls {
-		isPossible = isPossible && roll.reds <= redMax && roll.blues <= blueMax && roll.greens <= greenMax
-		if !isPossible {
-			break
-		}
-	}
-	return isPossible
 }
 
 func (r *Roll) setRollFromSuffix(s string, value int) {
@@ -63,25 +64,24 @@ func (r *Roll) parseValues(values []string) {
 	r.printRoll()
 }
 
-const (
-	redMax   = 12
-	greenMax = 13
-	blueMax  = 14
+type Game struct {
+	rolls    []Roll
+	id       int
+	MinRed   int
+	MinBlue  int
+	MinGreen int
+}
 
-	gamePrefix = "Game"
-
-	blueSuffix  = "blue"
-	greenSuffix = "green"
-	redSuffix   = "red"
-)
-
-var (
-	files = [2]string{
-		"example.txt",
-		"input.txt",
+func (g *Game) isPossible() bool {
+	isPossible := true
+	for _, roll := range g.rolls {
+		isPossible = isPossible && roll.reds <= redMax && roll.blues <= blueMax && roll.greens <= greenMax
+		if !isPossible {
+			break
+		}
 	}
-	colors = [3]string{blueSuffix, greenSuffix, redSuffix}
-)
+	return isPossible
+}
 
 func main() {
 	for _, path := range files {
